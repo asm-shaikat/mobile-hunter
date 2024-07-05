@@ -1,5 +1,5 @@
-const loadIphone = async () => {
-    const url = 'https://openapi.programming-hero.com/api/phones?search=iphone';
+const loadIphone = async (searchText = 'iphone') => {
+    const url = `https://openapi.programming-hero.com/api/phones?search=${searchText}`;
     try {
         const res = await fetch(url);
         const result = await res.json();
@@ -11,6 +11,11 @@ const loadIphone = async () => {
 
 const displayData = (phones) => {
     const mobileCard = document.getElementById('mobile-card');
+    mobileCard.textContent = '';
+    if (phones.length === 0) {
+        mobileCard.innerHTML = '<p class="text-gray-600">No results found</p>';
+        return;
+    }
     phones.forEach(phone => {
         const card = document.createElement('div');
         card.className = 'card bg-white rounded-lg shadow-lg overflow-hidden w-72';
@@ -29,4 +34,15 @@ const displayData = (phones) => {
         mobileCard.appendChild(card);
     });
 }
-document.addEventListener('DOMContentLoaded', loadIphone);
+
+function search(){
+    const searchText = document.getElementById('search').value.trim();
+    if (searchText === '') {
+        loadIphone();
+    } else {
+        loadIphone(searchText);
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    loadIphone(); 
+});
